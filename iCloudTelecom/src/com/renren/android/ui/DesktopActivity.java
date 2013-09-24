@@ -30,6 +30,7 @@ public class DesktopActivity extends Activity implements OnOpenListener {
 //	private NewsFeed mNewsFeed;
 //	private Message mMessage;
 	private Chat mChat;
+	private BlankPage mPage;
 //	private Friends mFriends;
 //	private Page mPage;
 //	private Location mLocation;
@@ -48,27 +49,22 @@ public class DesktopActivity extends Activity implements OnOpenListener {
 //		mUser = new User(mApplication, this, this);
 //		mMessage = new Message(this);
 		mChat = new Chat(this);
+		mPage = new BlankPage(this);
 //		mFriends = new Friends(mApplication, this, this);
 //		mPage = new Page(mApplication, this, this);
 //		mLocation = new Location(mApplication, this, this);
 //		mSearch = new Search(mApplication, this, this);
-		mAppsCenter = new AppsCenter(mApplication, DesktopActivity.this, DesktopActivity.this);
+		mAppsCenter = new AppsCenter(mApplication, this, this);
 		
 		mRoot.addView(mDesktop.getView(), params);
-		mRoot.addView(mAppsCenter.getView(), params);
+		mRoot.addView(mChat.getView(), params);
 		setContentView(mRoot);
 		setListener();
 	}
 
 	private void setListener() {
-//		mNewsFeed.setOnOpenListener(this);
-//		mUser.setOnOpenListener(this);
-//		mMessage.setOnOpenListener(this);
 		mChat.setOnOpenListener(this);
-//		mFriends.setOnOpenListener(this);
-//		mPage.setOnOpenListener(this);
-//		mLocation.setOnOpenListener(this);
-//		mSearch.setOnOpenListener(this);
+		mPage.setOnOpenListener(this);
 		mAppsCenter.setOnOpenListener(this);
 		
 		mDesktop.setOnChangeViewListener(new onChangeViewListener() {
