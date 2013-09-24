@@ -57,7 +57,7 @@ public class DesktopActivity extends Activity implements OnOpenListener {
 		mAppsCenter = new AppsCenter(mApplication, this, this);
 		
 		mRoot.addView(mDesktop.getView(), params);
-		mRoot.addView(mChat.getView(), params);
+		mRoot.addView(mAppsCenter.getView(), params);
 		setContentView(mRoot);
 		setListener();
 	}

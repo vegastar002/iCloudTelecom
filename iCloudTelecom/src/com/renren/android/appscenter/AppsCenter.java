@@ -162,7 +162,7 @@ public class AppsCenter {
 		phone_view.addTextChangedListener(new TextWatcher() {
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				if(null == mApp.getContactBeanList() || mApp.getContactBeanList().size()<1 || "".equals(s.toString())){
-					listView.setVisibility(View.INVISIBLE);
+					listView.setVisibility(View.GONE);
 					callLogList.setVisibility(View.VISIBLE);
 				}else{
 					if(null == t9Adapter){
@@ -216,6 +216,119 @@ public class AppsCenter {
 			}
 		});
 		
+		exCallLogView.findViewById(R.id.dialNum0).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (phone_view.getText().length() < 12) {
+					play(0);
+					input(v.getTag().toString());
+				}
+			}
+		});
+		
+		exCallLogView.findViewById(R.id.dialNum1).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (phone_view.getText().length() < 12) {
+					play(1);
+					input(v.getTag().toString());
+				}
+			}
+		});
+		
+		exCallLogView.findViewById(R.id.dialNum2).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (phone_view.getText().length() < 12) {
+					play(2);
+					input(v.getTag().toString());
+				}
+			}
+		});
+
+
+		exCallLogView.findViewById(R.id.dialNum3).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (phone_view.getText().length() < 12) {
+					play(3);
+					input(v.getTag().toString());
+				}
+			}
+		});
+
+		exCallLogView.findViewById(R.id.dialNum4).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (phone_view.getText().length() < 12) {
+					play(4);
+					input(v.getTag().toString());
+				}
+			}
+		});
+
+		exCallLogView.findViewById(R.id.dialNum5).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (phone_view.getText().length() < 12) {
+					play(5);
+					input(v.getTag().toString());
+				}
+			}
+		});
+
+		exCallLogView.findViewById(R.id.dialNum6).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (phone_view.getText().length() < 12) {
+					play(6);
+					input(v.getTag().toString());
+				}
+			}
+		});
+
+		exCallLogView.findViewById(R.id.dialNum7).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (phone_view.getText().length() < 12) {
+					play(7);
+					input(v.getTag().toString());
+				}
+			}
+		});
+
+		exCallLogView.findViewById(R.id.dialNum8).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (phone_view.getText().length() < 12) {
+					play(8);
+					input(v.getTag().toString());
+				}
+			}
+		});
+
+
+		exCallLogView.findViewById(R.id.dialNum9).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (phone_view.getText().length() < 12) {
+					play(9);
+					input(v.getTag().toString());
+				}
+			}
+		});
+
+
 		initCallLog();
 		
 		mFlip = (ImageView) mCallLog.findViewById(R.id.chat_flip);
@@ -376,7 +489,7 @@ public class AppsCenter {
 			keyboard_show_ll.setVisibility(View.VISIBLE);
 		}else{
 			bohaopan.setVisibility(View.VISIBLE);
-			keyboard_show_ll.setVisibility(View.INVISIBLE);
+			keyboard_show_ll.setVisibility(View.GONE);
 		}
 	}
 	
@@ -387,10 +500,12 @@ public class AppsCenter {
 		float value = (float)0.7 / max * current;
 		spool.setVolume(spool.play(id, value, value, 0, 0, 1f), value, value);
 	}
+	
 	private void input(String str) {
 		String p = phone_view.getText().toString();
 		phone_view.setText(p + str);
 	}
+	
 	private void delete() {
 		String p = phone_view.getText().toString();
 		if(p.length()>0){
