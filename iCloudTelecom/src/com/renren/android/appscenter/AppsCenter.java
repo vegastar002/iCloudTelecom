@@ -4,33 +4,46 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import xu.ye.bean.CallLogBean;
+import xu.ye.bean.ContactBean;
+import xu.ye.bean.GroupBean;
+import xu.ye.view.adapter.ContactHomeAdapter;
 import xu.ye.view.adapter.HomeDialAdapter;
 import xu.ye.view.adapter.T9Adapter;
+import xu.ye.view.ui.QuickAlphabeticBar;
 import android.app.Activity;
 import android.content.AsyncQueryHandler;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.net.Uri;
 import android.provider.CallLog;
+import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.GroupMembership;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
@@ -41,6 +54,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 
+import com.google.gson.Gson;
 import com.hust.wa.icloudtelecom.R;
 import com.renren.android.BaseApplication;
 import com.renren.android.ui.base.FlipperLayout.OnOpenListener;
@@ -49,7 +63,7 @@ public class AppsCenter {
 	private Context mContext;
 	private BaseApplication mApp;
 	private Activity mActivity;
-	private View mCallLog, exCallLogView;
+	private View mCallLog, exCallLogView, contactView;
 
 	private ImageView mFlip;
 	private ViewPager viewPager;
@@ -67,7 +81,17 @@ public class AppsCenter {
 	private Map<Integer, Integer> mapSound = new HashMap<Integer, Integer>();
 	private T9Adapter t9Adapter;
 
-	
+	private ListView personList;
+	private QuickAlphabeticBar alpha;
+	private AsyncQueryHandler asyncQueryContacts;
+	private Map<Integer, ContactBean> contactIdMap = null;
+	private List<ContactBean> listContacts;
+	private ContactHomeAdapter adapterContacts;
+	private String ACTION1 = "SET_DEFAULT_SIG";
+	private BaseReceiver1 receiver1 = null;
+	private ImageView mAddFriends;
+	public static int ssHight = 0;
+	private Button addContactBtn;
 	
 	public AppsCenter(BaseApplication application, Context context, Activity ak) {
 		mContext = context;
@@ -84,11 +108,13 @@ public class AppsCenter {
 		viewPager = (ViewPager) mCallLog.findViewById(R.id.contacts_vPager);
 		manyViews = new ArrayList<View>();
 		LayoutInflater mInflater = mActivity.getLayoutInflater();
+//		contactView = mInflater.inflate(R.layout.ex_list_call_log2, null);
 		exCallLogView = mInflater.inflate(R.layout.ex_list_call_log, null);
-		View coView = mInflater.inflate(R.layout.company_group_list, null);
+		contactView = mInflater.inflate(R.layout.home_contact_page, null);
 		
 		manyViews.add(exCallLogView);
-		manyViews.add(coView);
+		manyViews.add(contactView);
+		
 		viewPager.setAdapter(new MyPagerAdapter(manyViews));
 		viewPager.setCurrentItem(0);
 		viewPager.setOnPageChangeListener(new XTOnPageChangeListener());
@@ -123,6 +149,14 @@ public class AppsCenter {
 		keyboard_show_ll = (LinearLayout) exCallLogView.findViewById(R.id.keyboard_show_ll);
 		keyboard_show = (Button) exCallLogView.findViewById(R.id.keyboard_show);
 		callLogList = (ListView) exCallLogView.findViewById(R.id.call_log_list);
+		
+		personList = (ListView) contactView.findViewById(R.id.acbuwa_list);
+//		addContactBtn = (Button) contactView.findViewById(R.id.addContactBtn);
+//		addContactBtn.setOnClickListener(new OnClickListener() {
+//			public void onClick(View v) {
+//			}
+//		});
+		
 		asyncQueryCallLog = new CallLogAsyncQueryHandler(mContext.getContentResolver());
 		
 		keyboard_show.setOnClickListener(new OnClickListener() {
@@ -132,7 +166,6 @@ public class AppsCenter {
 		});
 		
 		am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-
 		spool = new SoundPool(11, AudioManager.STREAM_SYSTEM, 5);
 		mapSound.put(0, spool.load(mContext, R.raw.dtmf0, 0));
 		mapSound.put(1, spool.load(mContext, R.raw.dtmf1, 0));
@@ -154,6 +187,7 @@ public class AppsCenter {
 			public void onClick(View v) {
 				if (phone_view.getText().toString().length() >= 4) {
 					call(phone_view.getText().toString());
+					phone_view.setText("");
 				}
 			}
 		});
@@ -168,9 +202,6 @@ public class AppsCenter {
 					if(null == t9Adapter){
 						t9Adapter = new T9Adapter(mContext);
 						t9Adapter.assignment(mApp.getContactBeanList());
-//						TextView tv = new TextView(HomeDialActivity.this);
-//						tv.setBackgroundResource(R.drawable.dial_input_bg2);
-//						listView.addFooterView(tv);
 						listView.setAdapter(t9Adapter);
 						listView.setTextFilterEnabled(true);
 						listView.setOnScrollListener(new OnScrollListener() {
@@ -209,6 +240,7 @@ public class AppsCenter {
 				delete();
 			}
 		});
+		
 		delete.setOnLongClickListener(new OnLongClickListener() {
 			public boolean onLongClick(View v) {
 				phone_view.setText("");
@@ -331,6 +363,25 @@ public class AppsCenter {
 
 		initCallLog();
 		
+		
+		///==========================下面定义第二个页面Contacts的控件============================///
+//		personList = (ListView) contactView.findViewById(R.id.acbuwa_list);
+		alpha = (QuickAlphabeticBar) contactView.findViewById(R.id.fast_scroller);
+        
+		ViewTreeObserver vto2 = alpha.getViewTreeObserver();
+        vto2.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {  
+            @Override    
+            public void onGlobalLayout() {  
+            	alpha.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+            	ssHight = alpha.getHeight();
+//            	Log.i("", "1> " + ssHight);
+            }    
+        });
+        
+		asyncQueryContacts = new ConstactsAsyncQueryHandler(mContext.getContentResolver());
+		initContacts();
+		startReceiver1();
+		
 		mFlip = (ImageView) mCallLog.findViewById(R.id.chat_flip);
 	}
 
@@ -412,8 +463,11 @@ public class AppsCenter {
 		});
 		callLogList.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				
-				
+//				ContactBean cb = (ContactBean) adapterCallLog.getItem(position);
+//				String toPhone = cb.getPhoneNum();
+//				Uri uri = Uri.parse("tel:" + toPhone);
+//				Intent it = new Intent(Intent.ACTION_CALL, uri);
+//				mContext.startActivity(it);
 			}
 		});
 	}
@@ -537,4 +591,202 @@ public class AppsCenter {
 	public void setOnOpenListener(OnOpenListener onOpenListener) {
 		mOnOpenListener = onOpenListener;
 	}
+	
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private void startReceiver1() {
+		if(null==receiver1){
+			IntentFilter localIntentFilter = new IntentFilter(ACTION1);
+			receiver1 = new BaseReceiver1();
+			mContext.registerReceiver(receiver1, localIntentFilter);
+		}
+	}
+	
+	
+	private void stopReceiver1() {
+		if (null != receiver1)
+			mContext.unregisterReceiver(receiver1);
+	}
+	
+	public class BaseReceiver1 extends BroadcastReceiver {
+		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equals(ACTION1)) {
+				String str_bean = intent.getStringExtra("groupbean");
+				Gson gson = new Gson();
+				GroupBean gb = gson.fromJson(str_bean, GroupBean.class);
+				if(gb.getId() == 0){
+					initContacts();
+				}else{
+					queryGroupMember(gb);
+				}
+			}
+		}
+	}
+	
+	
+	private void queryGroupMember(GroupBean gb){
+		String[] RAW_PROJECTION = new String[]{ContactsContract.Data.RAW_CONTACT_ID};  
+		Cursor cur = mContext.getContentResolver().query(ContactsContract.Data.CONTENT_URI,RAW_PROJECTION,  
+				ContactsContract.Data.MIMETYPE+" = '"+GroupMembership.CONTENT_ITEM_TYPE  
+				+"' AND "+ContactsContract.Data.DATA1+"="+ gb.getId(), null, "data1 asc"); 
+
+		StringBuilder inSelectionBff = new StringBuilder().append(ContactsContract.RawContacts._ID + " IN ( 0");
+		while(cur.moveToNext()){
+			inSelectionBff.append(',').append(cur.getLong(0));
+		}
+		cur.close();	
+		inSelectionBff.append(')');
+
+		Cursor contactIdCursor =  mContext.getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI,  
+				new String[] { ContactsContract.RawContacts.CONTACT_ID }, inSelectionBff.toString(), null, ContactsContract.Contacts.DISPLAY_NAME+"  COLLATE LOCALIZED asc "); 
+		Map<Integer,Integer> map=new HashMap<Integer,Integer>();  
+		while (contactIdCursor.moveToNext()) {  
+			map.put(contactIdCursor.getInt(0), 1);  
+		}  
+		contactIdCursor.close(); 
+
+		Set<Integer> set = map.keySet();
+		Iterator<Integer> iter = set.iterator();
+		List<ContactBean> list=new ArrayList<ContactBean>();
+		while(iter.hasNext()){
+			Integer key = iter.next();
+			list.add(queryMemberOfGroup(key));
+		}
+		setAdapterContacts(list);
+	}
+
+	private ContactBean queryMemberOfGroup(int id){
+		ContactBean cb = null;
+		Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI; // 联系人的Uri
+		String[] projection = { 
+				ContactsContract.CommonDataKinds.Phone._ID,
+				ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+				ContactsContract.CommonDataKinds.Phone.DATA1,
+				"sort_key",
+				ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
+				ContactsContract.CommonDataKinds.Phone.PHOTO_ID,
+				ContactsContract.CommonDataKinds.Phone.LOOKUP_KEY
+		}; // 查询的列
+		Cursor cursor = mContext.getContentResolver().query(uri, projection, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id, null, null);
+		if (cursor != null && cursor.getCount() > 0) {
+			listContacts = new ArrayList<ContactBean>();
+			cursor.moveToFirst();
+			for (int i = 0; i < cursor.getCount(); i++) {
+				cursor.moveToPosition(i);
+				String name = cursor.getString(1);
+				String number = cursor.getString(2);
+				String sortKey = cursor.getString(3);
+				int contactId = cursor.getInt(4);
+				Long photoId = cursor.getLong(5);
+				String lookUpKey = cursor.getString(6);
+
+				cb = new ContactBean();
+				cb.setDisplayName(name);
+//				if (number.startsWith("+86")) {// 去除多余的中国地区号码标志，对这个程序没有影响。
+//					cb.setPhoneNum(number.substring(3));
+//				} else {
+					cb.setPhoneNum(number);
+//				}
+				cb.setSortKey(sortKey);
+				cb.setContactId(contactId);
+				cb.setPhotoId(photoId);
+				cb.setLookUpKey(lookUpKey);
+			}
+		}
+		cursor.close();
+		return cb;
+	}
+	
+	
+	private class ConstactsAsyncQueryHandler extends AsyncQueryHandler {
+
+		public ConstactsAsyncQueryHandler(ContentResolver cr) {
+			super(cr);
+		}
+
+		/**
+		 * 查询结束的回调函数
+		 */
+		@Override
+		protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+			if (cursor != null && cursor.getCount() > 0) {
+				contactIdMap = new HashMap<Integer, ContactBean>();
+				listContacts = new ArrayList<ContactBean>();
+				cursor.moveToFirst();
+				for (int i = 0; i < cursor.getCount(); i++) {
+					cursor.moveToPosition(i);
+					String name = cursor.getString(1);
+					String number = cursor.getString(2);
+					String sortKey = cursor.getString(3);
+					int contactId = cursor.getInt(4);
+					Long photoId = cursor.getLong(5);
+					String lookUpKey = cursor.getString(6);
+
+					if (contactIdMap.containsKey(contactId)) {
+						
+					}else{
+						ContactBean cb = new ContactBean();
+						cb.setDisplayName(name);
+//					if (number.startsWith("+86")) {// 去除多余的中国地区号码标志，对这个程序没有影响。
+//						cb.setPhoneNum(number.substring(3));
+//					} else {
+						cb.setPhoneNum(number);
+//					}
+						cb.setSortKey(sortKey);
+						cb.setContactId(contactId);
+						cb.setPhotoId(photoId);
+						cb.setLookUpKey(lookUpKey);
+						listContacts.add(cb);
+						contactIdMap.put(contactId, cb);
+					}
+				}
+				
+				Log.i("", "listsize> " + listContacts.size());
+				if (listContacts.size() > 0) {
+					setAdapterContacts(listContacts);
+				}
+			}
+		}
+
+	}
+	
+	
+	private void setAdapterContacts(List<ContactBean> list) {
+		adapterContacts = new ContactHomeAdapter(mContext, list, alpha);
+		personList.setAdapter(adapterContacts);
+		alpha.init(contactView);
+		alpha.setListView(personList);
+		alpha.setHight(ssHight);
+//		Log.i("", "2> " + ssHight);
+		personList.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Log.i("", "按下");
+//				ContactBean cb = (ContactBean) adapterContacts.getItem(position);
+//				String toPhone = cb.getPhoneNum();
+//				Uri uri = Uri.parse("tel:" + toPhone);
+//				Intent it = new Intent(Intent.ACTION_CALL, uri);
+//				mContext.startActivity(it);
+			}
+		});
+	}
+	
+	
+	private void initContacts(){
+		Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI; // 联系人的Uri
+		String[] projection = { 
+				ContactsContract.CommonDataKinds.Phone._ID,
+				ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+				ContactsContract.CommonDataKinds.Phone.DATA1, "sort_key",
+				ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
+				ContactsContract.CommonDataKinds.Phone.PHOTO_ID,
+				ContactsContract.CommonDataKinds.Phone.LOOKUP_KEY
+		}; // 查询的列
+		asyncQueryContacts.startQuery(0, null, uri, projection, null, null,
+				"sort_key COLLATE LOCALIZED asc"); // 按照sort_key升序查询
+	}
+	
+	
+	
+	
 }

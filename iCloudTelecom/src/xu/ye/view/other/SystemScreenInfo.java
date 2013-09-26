@@ -2,6 +2,7 @@ package xu.ye.view.other;
 
 import android.app.Activity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 public class SystemScreenInfo {
 

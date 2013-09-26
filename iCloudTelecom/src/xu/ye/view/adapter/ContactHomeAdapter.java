@@ -16,12 +16,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.Contacts;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.QuickContactBadge;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hust.wa.icloudtelecom.R;
@@ -30,8 +29,8 @@ public class ContactHomeAdapter extends BaseAdapter{
 	
 	private LayoutInflater inflater;
 	private List<ContactBean> list;
-	private HashMap<String, Integer> alphaIndexer;//锟斤拷锟斤拷每锟斤拷锟斤拷锟斤拷锟斤拷list锟叫碉拷位锟矫★拷#-0锟斤拷A-4锟斤拷B-10锟斤拷
-	private String[] sections;//每锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟�A,B,C,F...锟斤拷
+	private HashMap<String, Integer> alphaIndexer;
+	private String[] sections;
 	private Context ctx;
 	
 	public ContactHomeAdapter(Context context, List<ContactBean> list, QuickAlphabeticBar alpha) {
@@ -84,11 +83,10 @@ public class ContactHomeAdapter extends BaseAdapter{
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.contact_home_list_item, null);
 			holder = new ViewHolder();
-			holder.qcb = (QuickContactBadge) convertView.findViewById(R.id.qcb);
+			holder.qcb = (ImageButton) convertView.findViewById(R.id.qcb);
 			holder.alpha = (TextView) convertView.findViewById(R.id.alpha);
 			holder.name = (TextView) convertView.findViewById(R.id.name);
-			holder.number = (TextView) convertView
-					.findViewById(R.id.number);
+			holder.number = (TextView) convertView.findViewById(R.id.number);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -99,7 +97,7 @@ public class ContactHomeAdapter extends BaseAdapter{
 		String number = cb.getPhoneNum();
 		holder.name.setText(name);
 		holder.number.setText(number);
-		holder.qcb.assignContactUri(Contacts.getLookupUri(cb.getContactId(), cb.getLookUpKey()));
+//		holder.qcb.assignContactUri(Contacts.getLookupUri(cb.getContactId(), cb.getLookUpKey()));
 		if(0 == cb.getPhotoId()){
 			holder.qcb.setImageResource(R.drawable.touxiang);
 		}else{
@@ -108,14 +106,11 @@ public class ContactHomeAdapter extends BaseAdapter{
 			Bitmap contactPhoto = BitmapFactory.decodeStream(input);
 			holder.qcb.setImageBitmap(contactPhoto);
 		}
-		// 锟斤拷前锟斤拷系锟剿碉拷sortKey
 		String currentStr = getAlpha(cb.getSortKey());
-		// 锟斤拷一锟斤拷锟斤拷系锟剿碉拷sortKey
 		String previewStr = (position - 1) >= 0 ? getAlpha(list.get(position - 1).getSortKey()) : " ";
 		/**
-		 * 锟叫讹拷锟斤拷示#锟斤拷A-Z锟斤拷TextView锟斤拷锟斤拷锟斤拷杉锟�
 		 */
-		if (!previewStr.equals(currentStr)) { // 锟斤拷前锟斤拷系锟剿碉拷sortKey锟斤拷=锟斤拷一锟斤拷锟斤拷系锟剿碉拷sortKey锟斤拷说锟斤拷锟斤拷前锟斤拷系锟斤拷锟斤拷锟斤拷锟介。
+		if (!previewStr.equals(currentStr)) {
 			holder.alpha.setVisibility(View.VISIBLE);
 			holder.alpha.setText(currentStr);
 		} else {
@@ -125,14 +120,13 @@ public class ContactHomeAdapter extends BaseAdapter{
 	}
 	
 	private static class ViewHolder {
-		QuickContactBadge qcb;
+		ImageButton qcb;
 		TextView alpha;
 		TextView name;
 		TextView number;
 	}
 	
 	/**
-	 * 锟斤拷取英锟侥碉拷锟斤拷锟斤拷母锟斤拷锟斤拷英锟斤拷锟斤拷母锟斤拷#锟斤拷锟芥。
 	 * 
 	 * @param str
 	 * @return
@@ -145,10 +139,9 @@ public class ContactHomeAdapter extends BaseAdapter{
 			return "#";
 		}
 		char c = str.trim().substring(0, 1).charAt(0);
-		// 锟斤拷锟斤拷锟斤拷式锟斤拷锟叫讹拷锟斤拷锟斤拷母锟角凤拷锟斤拷英锟斤拷锟斤拷母
 		Pattern pattern = Pattern.compile("^[A-Za-z]+$");
 		if (pattern.matcher(c + "").matches()) {
-			return (c + "").toUpperCase(); // 锟斤拷写锟斤拷锟�
+			return (c + "").toUpperCase();
 		} else {
 			return "#";
 		}

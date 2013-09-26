@@ -24,7 +24,6 @@ public class SizeCallBackForMenu implements SizeCallBack {
 		dims[0] = width;
 		dims[1] = height;
 		
-		/*视图不是中间视图*/
 		if(idx != 1){
 			dims[0] = width - this.menuWidth;
 		}

@@ -170,10 +170,12 @@ public final class R {
         public static final int v5_0_1_widget_default_head=0x7f020063;
     }
     public static final class id {
-        public static final int acbuwa_list=0x7f0c0033;
-        public static final int acbuwa_page=0x7f0c0031;
-        public static final int action_settings=0x7f0c003c;
+        public static final int acbuwa_list=0x7f0c0031;
+        public static final int acbuwa_page=0x7f0c0034;
+        public static final int acbuwa_topbar=0x7f0c0035;
+        public static final int action_settings=0x7f0c003f;
         public static final int addChat0=0x7f0c0008;
+        public static final int addContactBtn=0x7f0c0038;
         public static final int alpha=0x7f0c000a;
         public static final int appscenter_collection_img=0x7f0c0002;
         public static final int appscenter_flip=0x7f0c0000;
@@ -181,9 +183,9 @@ public final class R {
         public static final int back_btn=0x7f0c0007;
         public static final int bohao_num=0x7f0c001f;
         public static final int bohaopan=0x7f0c001c;
-        public static final int call_btn=0x7f0c0037;
+        public static final int call_btn=0x7f0c003a;
         public static final int call_log_list=0x7f0c001a;
-        public static final int call_type=0x7f0c0036;
+        public static final int call_type=0x7f0c0039;
         public static final int chat_addfriends=0x7f0c0004;
         public static final int chat_display=0x7f0c0005;
         public static final int chat_flip=0x7f0c0003;
@@ -210,26 +212,27 @@ public final class R {
         public static final int dialj=0x7f0c002b;
         public static final int dialx=0x7f0c0029;
         public static final int editText1=0x7f0c0009;
-        public static final int fast_position=0x7f0c0035;
-        public static final int fast_scroller=0x7f0c0034;
-        public static final int fg=0x7f0c0038;
+        public static final int fast_position=0x7f0c0033;
+        public static final int fast_scroller=0x7f0c0032;
+        public static final int fg=0x7f0c003b;
         public static final int friends_chat_btn=0x7f0c0016;
         public static final int in_btn=0x7f0c002f;
         public static final int keyboard_show=0x7f0c002d;
         public static final int keyboard_show_ll=0x7f0c002c;
         public static final int layout_top=0x7f0c0006;
         public static final int main_tab=0x7f0c0015;
+        public static final int menuBtn=0x7f0c0036;
         public static final int miss_btn=0x7f0c002e;
         public static final int name=0x7f0c000c;
         public static final int number=0x7f0c000d;
         public static final int out_btn=0x7f0c0030;
         public static final int phone_view=0x7f0c001d;
-        public static final int pinyin=0x7f0c003b;
+        public static final int pinyin=0x7f0c003e;
         public static final int qcb=0x7f0c000b;
-        public static final int slidingid=0x7f0c0032;
         public static final int team_chat_btn=0x7f0c0017;
-        public static final int time=0x7f0c0039;
-        public static final int titlebar=0x7f0c003a;
+        public static final int time=0x7f0c003c;
+        public static final int titlebar=0x7f0c003d;
+        public static final int topbar_title=0x7f0c0037;
         public static final int twoList=0x7f0c0018;
     }
     public static final class layout {
@@ -243,8 +246,8 @@ public final class R {
         public static final int desktop_list_group=0x7f030007;
         public static final int doormain=0x7f030008;
         public static final int ex_list_call_log=0x7f030009;
-        public static final int history_list=0x7f03000a;
-        public static final int home_contact_list_item=0x7f03000b;
+        public static final int ex_list_call_log2=0x7f03000a;
+        public static final int history_list=0x7f03000b;
         public static final int home_contact_page=0x7f03000c;
         public static final int home_dial_calllog_list_item=0x7f03000d;
         public static final int home_dial_page=0x7f03000e;

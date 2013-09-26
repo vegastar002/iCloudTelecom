@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -17,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hust.wa.icloudtelecom.R;
+import com.renren.android.appscenter.AppsCenter;
 
 /**
  * 字母表
@@ -43,7 +45,7 @@ public class QuickAlphabeticBar extends ImageButton {
 		super(context, attrs, defStyle);
 	}
 
-	public void init(Activity ctx) {
+	public void init(View ctx) {
 		mDialogText = (TextView) ctx.findViewById(R.id.fast_position);
 		mDialogText.setVisibility(View.INVISIBLE);
 		mHandler = new Handler();
@@ -66,6 +68,11 @@ public class QuickAlphabeticBar extends ImageButton {
 		int act = event.getAction();
 		float y = event.getY();
 		final int oldChoose = choose;
+		
+		if ( mHight == 0 ){
+			mHight = AppsCenter.ssHight;
+		}
+		
 		// 计算手指位置，找到对应的段，让mList移动段开头的位置上
 		int selectIndex = (int) (y / (mHight / letters.length));
 		
@@ -74,8 +81,7 @@ public class QuickAlphabeticBar extends ImageButton {
 			if (alphaIndexer.containsKey(key)) {
 				int pos = alphaIndexer.get(key);
 				if (mList.getHeaderViewsCount() > 0) {// 防止ListView有标题栏，本例中没有。
-					this.mList.setSelectionFromTop(
-							pos + mList.getHeaderViewsCount(), 0);
+					this.mList.setSelectionFromTop(pos + mList.getHeaderViewsCount(), 0);
 				} else {
 					this.mList.setSelectionFromTop(pos, 0);
 				}
@@ -151,7 +157,7 @@ public class QuickAlphabeticBar extends ImageButton {
 		int width = getWidth();
 		int singleHeight = height / letters.length;
 		for (int i = 0; i < letters.length; i++) {
-			paint.setColor(Color.WHITE);
+			paint.setColor(Color.BLACK);
 			paint.setTextSize(20);
 			paint.setTypeface(Typeface.DEFAULT_BOLD);
 			paint.setAntiAlias(true);

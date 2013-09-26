@@ -1,5 +1,6 @@
 package com.renren.android.ui;
 
+import xu.ye.view.other.SystemScreenInfo;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -48,7 +49,7 @@ public class DesktopActivity extends Activity implements OnOpenListener {
 //		mNewsFeed = new NewsFeed(mApplication, this, this);
 //		mUser = new User(mApplication, this, this);
 //		mMessage = new Message(this);
-		mChat = new Chat(this);
+		mChat = new Chat(getApplicationContext(), DesktopActivity.this);
 		mPage = new BlankPage(this);
 //		mFriends = new Friends(mApplication, this, this);
 //		mPage = new Page(mApplication, this, this);
@@ -60,6 +61,7 @@ public class DesktopActivity extends Activity implements OnOpenListener {
 		mRoot.addView(mAppsCenter.getView(), params);
 		setContentView(mRoot);
 		setListener();
+		
 	}
 
 	private void setListener() {

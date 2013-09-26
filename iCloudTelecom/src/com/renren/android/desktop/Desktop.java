@@ -132,7 +132,7 @@ public class Desktop {
 	private void init() {
 		init_Data();
 //		mName.setText(mApplication.mRenRen.getUserName());
-		mName.setText("од╬╦Да");
+		mName.setText("╦и");
 //		mApplication.mHeadBitmap.display(mAvatar, mApplication.mRenRen.getUserHeadUrl());
 		mAdapter = new DesktopAdapter(mContext, mGroup, mChild);
 		mDisplay.setAdapter(mAdapter);
