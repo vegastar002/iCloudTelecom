@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+   Copyright (c) 2013 The CCP project authors. All Rights Reserved.
+ 
+   Use of this source code is governed by a Beijing Speedtong Information Technology Co.,Ltd license
+   that can be found in the LICENSE file in the root of the web site.
+ 
+    				http://www.cloopen.com
+ 
+   An additional intellectual property rights grant can be found
+   in the file PATENTS.  All contributing project authors may
+   be found in the AUTHORS file in the root of the source tree.
+ -->
+<resources>
+    <string-array name="group_info">
+        <item>临时组(上限100人)</item>
+        <item>普通组(上限300人)</item>
+        <item>VIP组(上限500人)</item>
+    </string-array>
+    
+    <string-array name="group_join_model">
+        <item>默认直接加入</item>
+        <item>需要身份验证</item>
+        <item>私有群组</item>
+    </string-array>
+    <string-array name="chat_select_item">
+        <item>拍照</item>
+        <item>文件</item>
+    </string-array>
+    <string-array name="member_memu_forbidden">
+        <item>移除成员</item>
+        <item>禁言</item>
+    </string-array>
+    <string-array name="member_memu_forbidden_cancle">
+        <item>移除成员</item>
+        <item>取消禁言</item>
+    </string-array>
+    <string-array name="chatroom_pull">
+        <item>邀请电话用户加入</item>
+        <item>管理成员</item>
+        <item>解散房间</item>
+    </string-array>
+</resources>

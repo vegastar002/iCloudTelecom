@@ -5,19 +5,16 @@ import java.util.List;
 import xu.ye.bean.CallLogBean;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hust.wa.icloudtelecom.R;
+import com.voice.demo.voip.CallOutActivity;
 
 public class HomeDialAdapter extends BaseAdapter {
 
@@ -93,9 +90,14 @@ public class HomeDialAdapter extends BaseAdapter {
 	private void addViewListener(View view, final CallLogBean clb, final int position){
 		view.setOnClickListener(new OnClickListener(){
 			public void onClick(View view) {
-				Uri uri = Uri.parse("tel:" + clb.getNumber());
-				Intent it = new Intent(Intent.ACTION_CALL, uri);
-				ctx.startActivity(it);
+//				Uri uri = Uri.parse("tel:" + clb.getNumber());
+//				Intent it = new Intent(Intent.ACTION_CALL, uri);
+//				ctx.startActivity(it);
+				
+				Intent intent = new Intent(ctx, CallOutActivity.class);
+				intent.putExtra("VoIPInput", clb.getNumber());
+				intent.putExtra("mode",	"direct_talk");
+				ctx.startActivity(intent);
 			}
 		});
 	}

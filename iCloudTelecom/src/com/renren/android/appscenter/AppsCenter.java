@@ -58,6 +58,7 @@ import com.google.gson.Gson;
 import com.hust.wa.icloudtelecom.R;
 import com.renren.android.BaseApplication;
 import com.renren.android.ui.base.FlipperLayout.OnOpenListener;
+import com.voice.demo.voip.CallOutActivity;
 
 public class AppsCenter {
 	private Context mContext;
@@ -150,7 +151,7 @@ public class AppsCenter {
 		keyboard_show = (Button) exCallLogView.findViewById(R.id.keyboard_show);
 		callLogList = (ListView) exCallLogView.findViewById(R.id.call_log_list);
 		
-		personList = (ListView) contactView.findViewById(R.id.acbuwa_list);
+		personList = (ListView) contactView.findViewById(R.id.contact_list);
 //		addContactBtn = (Button) contactView.findViewById(R.id.addContactBtn);
 //		addContactBtn.setOnClickListener(new OnClickListener() {
 //			public void onClick(View v) {
@@ -365,7 +366,6 @@ public class AppsCenter {
 		
 		
 		///==========================下面定义第二个页面Contacts的控件============================///
-//		personList = (ListView) contactView.findViewById(R.id.acbuwa_list);
 		alpha = (QuickAlphabeticBar) contactView.findViewById(R.id.fast_scroller);
         
 		ViewTreeObserver vto2 = alpha.getViewTreeObserver();
@@ -375,7 +375,7 @@ public class AppsCenter {
             	alpha.getViewTreeObserver().removeGlobalOnLayoutListener(this);
             	ssHight = alpha.getHeight();
 //            	Log.i("", "1> " + ssHight);
-            }    
+            }
         });
         
 		asyncQueryContacts = new ConstactsAsyncQueryHandler(mContext.getContentResolver());
@@ -567,9 +567,13 @@ public class AppsCenter {
 		}
 	}
 	private void call(String phone) {
-		Uri uri = Uri.parse("tel:" + phone);
-		Intent it = new Intent(Intent.ACTION_CALL, uri);
-		mContext.startActivity(it);
+//		Uri uri = Uri.parse("tel:" + phone);
+//		Intent it = new Intent(Intent.ACTION_CALL, uri);
+//		mContext.startActivity(it);
+		Intent intent = new Intent(mContext, CallOutActivity.class);
+		intent.putExtra("VoIPInput", phone);
+		intent.putExtra("mode",	"direct_talk");
+		mContext.startActivity(intent);
 	}
 	
 	
@@ -662,8 +666,7 @@ public class AppsCenter {
 		String[] projection = { 
 				ContactsContract.CommonDataKinds.Phone._ID,
 				ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-				ContactsContract.CommonDataKinds.Phone.DATA1,
-				"sort_key",
+				ContactsContract.CommonDataKinds.Phone.DATA1, "sort_key",
 				ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
 				ContactsContract.CommonDataKinds.Phone.PHOTO_ID,
 				ContactsContract.CommonDataKinds.Phone.LOOKUP_KEY
@@ -683,11 +686,7 @@ public class AppsCenter {
 
 				cb = new ContactBean();
 				cb.setDisplayName(name);
-//				if (number.startsWith("+86")) {// 去除多余的中国地区号码标志，对这个程序没有影响。
-//					cb.setPhoneNum(number.substring(3));
-//				} else {
-					cb.setPhoneNum(number);
-//				}
+				cb.setPhoneNum(number);
 				cb.setSortKey(sortKey);
 				cb.setContactId(contactId);
 				cb.setPhotoId(photoId);
@@ -728,11 +727,7 @@ public class AppsCenter {
 					}else{
 						ContactBean cb = new ContactBean();
 						cb.setDisplayName(name);
-//					if (number.startsWith("+86")) {// 去除多余的中国地区号码标志，对这个程序没有影响。
-//						cb.setPhoneNum(number.substring(3));
-//					} else {
 						cb.setPhoneNum(number);
-//					}
 						cb.setSortKey(sortKey);
 						cb.setContactId(contactId);
 						cb.setPhotoId(photoId);
@@ -742,7 +737,6 @@ public class AppsCenter {
 					}
 				}
 				
-				Log.i("", "listsize> " + listContacts.size());
 				if (listContacts.size() > 0) {
 					setAdapterContacts(listContacts);
 				}
@@ -758,15 +752,14 @@ public class AppsCenter {
 		alpha.init(contactView);
 		alpha.setListView(personList);
 		alpha.setHight(ssHight);
-//		Log.i("", "2> " + ssHight);
+		
 		personList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				// TODO Auto-generated method stub
 				Log.i("", "按下");
-//				ContactBean cb = (ContactBean) adapterContacts.getItem(position);
-//				String toPhone = cb.getPhoneNum();
-//				Uri uri = Uri.parse("tel:" + toPhone);
-//				Intent it = new Intent(Intent.ACTION_CALL, uri);
-//				mContext.startActivity(it);
+				
 			}
 		});
 	}

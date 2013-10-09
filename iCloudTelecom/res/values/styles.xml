@@ -25,7 +25,7 @@
     
     <string-array name="desktop_list_item_favorite_strings">
         <item>新鲜事</item>
-        <item>消息</item>
+        <item>网络电话</item>
         <item>私信</item>
         <item>好友</item>
         <item>公共主页</item>
@@ -78,6 +78,105 @@
         <item name="android:layout_alignParentRight">true</item>
     </style>
     
+    
+    <style name="AppTheme" parent="android:Theme.Light" />
+    <style name="recLargeCustomProgressBar" parent="@android:style/Widget.ProgressBar">
+        <item name="android:indeterminateDrawable">@drawable/progressbar</item>
+    </style>
+
+    <style name="VoiceAccountTitle">
+        <item name="android:textSize">16.0sp</item>
+        <item name="android:textColor">@color/voice_pref_title</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    <style name="VoiceAccountTitleValue">
+        <item name="android:textSize">15.0sp</item>
+        <item name="android:textColor">@color/voice_pref_value</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    
+         <style name="VoiceAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_from_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_to_bottom</item>
+    </style>
+
+      <style name="VoiceTheme">
+          <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@style/VoiceAnimation</item>
+    </style>
+    
+       <style name="C9_Font_white">
+        <item name="android:textSize">15.0sp</item>
+        <item name="android:textColor">#ff535353</item>
+    </style>
+    <style name="C8_Font_white">
+        <item name="android:textSize">15.0sp</item>
+        <item name="android:textColor">#8ece04</item>
+    </style>
+      <style name="detail_p_activity_item_style">
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">44.0dip</item>
+    </style>
+    <style name="detail_p_activity_title_style" parent="@style/C9_Font_white">
+        <item name="android:duplicateParentState">true</item>
+        <item name="android:layout_width">90.0dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">12.0dip</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+    <style name="detail_p_activity_arrow_style">
+        <item name="android:duplicateParentState">true</item>
+        <item name="android:layout_width">34.0dip</item>
+        <item name="android:layout_height">34.0dip</item>
+        <item name="android:src">@drawable/icon_group_card_detail_selector</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+    <style name="detail_p_activity_txt_style" parent="@style/C8_Font_white">
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">left</item>
+        <item name="android:duplicateParentState">true</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">12.0dip</item>
+        <item name="android:layout_marginRight">12.0dip</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_toLeftOf">@id/indicator</item>
+        <item name="android:layout_toRightOf">@id/title</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+    
+    <style name="Animations_PopDownMenu_Top">
+        <item name="android:windowEnterAnimation">@anim/push_down_out</item>
+        <item name="android:windowExitAnimation">@anim/push_up_in</item>
+    </style>
+    
+        <style name="roomRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/xh_rating_bar_layer</item>
+        <item name="android:minHeight">16dip</item>
+        <item name="android:maxHeight">16dip</item>
+    </style>
+
+    <style name="Theme.CustomDialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@drawable/xh_dialog_activity</item>
+         <item name="android:windowNoTitle">true</item>
+    </style>
+    
+    <style name="loading_small" parent="@android:style/Widget.ProgressBar.Small">
+		<item name="android:indeterminateDrawable">@drawable/progressbar_style</item>
+		<item name="android:layout_width">21dip</item> 
+		<item name="android:layout_height">21dip</item>
+		<item name="android:layout_gravity">center_vertical</item>
+	</style>
+	
     
     
 </resources>

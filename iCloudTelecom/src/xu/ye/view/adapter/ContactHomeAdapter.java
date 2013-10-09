@@ -16,11 +16,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hust.wa.icloudtelecom.R;
@@ -64,29 +67,45 @@ public class ContactHomeAdapter extends BaseAdapter{
 
 	@Override
 	public Object getItem(int position) {
-		return list.get(position);
+//		return list.get(position);
+		return null;
 	}
 
 	@Override
 	public long getItemId(int position) {
-		return position;
+//		return position;
+		return 0;
 	}
 	
-	public void remove(int position){
-		list.remove(position);
-	}
+//	public void remove(int position){
+//		list.remove(position);
+//	}
 	
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		
 		ViewHolder holder;
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.contact_home_list_item, null);
 			holder = new ViewHolder();
+			
 			holder.qcb = (ImageButton) convertView.findViewById(R.id.qcb);
 			holder.alpha = (TextView) convertView.findViewById(R.id.alpha);
 			holder.name = (TextView) convertView.findViewById(R.id.name);
 			holder.number = (TextView) convertView.findViewById(R.id.number);
+			
+			holder.gan = (LinearLayout) convertView.findViewById(R.id.gancaomb);
+			holder.gan.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View view) {
+					// TODO Auto-generated method stub
+					Log.i("", "gana: " + position);
+				}
+			});
+			
+
+			
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -116,6 +135,8 @@ public class ContactHomeAdapter extends BaseAdapter{
 		} else {
 			holder.alpha.setVisibility(View.GONE);
 		}
+		
+		
 		return convertView;
 	}
 	
@@ -124,6 +145,7 @@ public class ContactHomeAdapter extends BaseAdapter{
 		TextView alpha;
 		TextView name;
 		TextView number;
+		LinearLayout gan;
 	}
 	
 	/**

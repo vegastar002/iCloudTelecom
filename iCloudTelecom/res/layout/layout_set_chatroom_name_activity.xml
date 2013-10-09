@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+   Copyright (c) 2013 The CCP project authors. All Rights Reserved.
+ 
+   Use of this source code is governed by a Beijing Speedtong Information Technology Co.,Ltd license
+   that can be found in the LICENSE file in the root of the web site.
+ 
+    				http://www.cloopen.com
+ 
+   An additional intellectual property rights grant can be found
+   in the file PATENTS.  All contributing project authors may
+   be found in the AUTHORS file in the root of the source tree.
+ -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#f4f4f4"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/head"
+        android:layout_width="match_parent"
+        layout="@layout/voice_head" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/head"
+        android:orientation="vertical"
+        android:padding="25.0dip" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10.0dip"
+            android:padding="3.0dip"
+            android:text="@string/str_chatroom_name"
+            android:textColor="#9D9D9D"
+            android:textSize="19.0sp" />
+
+        <EditText
+            android:id="@+id/chatroom_name"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="5dp"
+            android:text="Chatroom"
+            android:background="@drawable/input_box"
+            android:hint="@string/str_chatroom_name_input_hit"
+            android:padding="3.0dip" />
+
+        <Button
+            android:id="@+id/create_chatroom_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24.0dip"
+            android:minWidth="160.0dip"
+            android:background="@drawable/netphone_direct_call_selector"
+            android:text="@string/str_button_create_chatroom"
+            android:textColor="@android:color/white"
+            android:textSize="19.0sp" />
+    </LinearLayout>
+
+</RelativeLayout>

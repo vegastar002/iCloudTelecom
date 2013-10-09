@@ -91,7 +91,7 @@ public class Desktop {
 							break;
 
 						case 1:
-							mOnChangeViewListener.onChangeView(View_Util.Message);
+							mOnChangeViewListener.onChangeView(View_Util.Apps_Center);
 							break;
 						case 2:
 							mOnChangeViewListener.onChangeView(View_Util.Chat);
@@ -109,7 +109,7 @@ public class Desktop {
 							mOnChangeViewListener.onChangeView(View_Util.Search);
 							break;
 						case 7:
-							mOnChangeViewListener.onChangeView(View_Util.Apps_Center);
+							mOnChangeViewListener.onChangeView(View_Util.Message);
 							break;
 						}
 					}

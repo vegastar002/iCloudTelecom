@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hust.wa.icloudtelecom"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionCode="325"
+    android:versionName="3.2.5" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -21,7 +21,15 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    
+	<uses-permission android:name="android.permission.RECORD_AUDIO" />
+	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+	<uses-permission android:name="android.permission.CAMERA"/>
+	<uses-permission android:name="android.permission.CALL_PHONE"/>
+	
     
     <application
         android:allowBackup="true"
@@ -31,13 +39,189 @@
         android:theme="@android:style/Theme.NoTitleBar" >
         
         <activity
-            android:name="com.renren.android.ui.DesktopActivity"
+            android:name="com.renren.android.AppStart"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity android:name="com.renren.android.ui.DesktopActivity" />
+        
+        
+        <activity android:name="com.voice.demo.voip.CallOutActivity"  android:launchMode="singleInstance" android:label="@string/app_name"
+			android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="ACTION_VOIP_OUTCALL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+		</activity>
+
+		<activity android:name="com.voice.demo.voip.CallInActivity"  android:launchMode="singleInstance" android:label="@string/app_name"
+			android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="ACTION_VOIP_INCALL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+		</activity>
+		
+		<activity android:name="com.voice.demo.voip.VoiceLoginActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		<activity android:name="com.voice.demo.voip.NetPhoneCallActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		<activity android:name="com.voice.demo.voip.LandingCallActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		<activity android:name="com.voice.demo.voip.VoIPCallActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		
+		<!-- voice  message -->
+		<activity android:name="com.voice.demo.voip.SelectVoiceActivity" android:launchMode="singleTask"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		<!-- interphone  -->
+		<activity android:name="com.voice.demo.interphone.InterPhoneRoomActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		<activity android:name="com.voice.demo.interphone.InterPhoneActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		<activity android:name="com.voice.demo.interphone.InviteInterPhoneActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		
+		
+		<!-- Video ... -->
+		<activity android:name="com.voice.demo.video.VideoActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		<!-- OutboundMarketing  -->
+		<activity android:name="com.voice.demo.outboundmarketing.MarketActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		<activity android:name="com.voice.demo.outboundmarketing.MarketStateActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		
+		<!-- VoiceVerificationCodeActivity.java  -->
+		<activity android:name="com.voice.demo.voicecode.VoiceVerificationCodeActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		<activity android:name="com.voice.demo.voicecode.ValidationStatusActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		
+		<!--  ChatRoom  /CCPVoipDemo/src/com/voice/demo/chatroom/ChatRoomName.java-->
+		<activity android:name="com.voice.demo.chatroom.ChatRoomName"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		<activity android:name="com.voice.demo.chatroom.ChatRoomActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		<activity android:name="com.voice.demo.chatroom.ChatRoomConversation"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		<activity android:name="com.voice.demo.chatroom.ChatroomMemberManagerActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		
+		<!--  group -->
+		<activity android:name="com.voice.demo.group.CreateGroupActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		<activity android:name="com.voice.demo.group.GroupMessageListActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		<activity android:name="com.voice.demo.group.GroupListActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		<activity android:name="com.voice.demo.group.GroupDetailActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		<activity android:name="com.voice.demo.group.IMChatActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait"
+			android:windowSoftInputMode="stateHidden|adjustResize" >
+		</activity>
+		<activity android:name="com.voice.demo.group.FileBrowserActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait"
+			android:windowSoftInputMode="stateHidden" android:theme="@style/VoiceTheme">
+		</activity>
+		<activity android:name="com.voice.demo.group.GroupChatActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait"
+			android:windowSoftInputMode="stateHidden|adjustResize" >
+		</activity>
+		<activity android:name="com.voice.demo.group.SystemMsgActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		<activity android:name="com.voice.demo.group.GroupEditActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		<activity android:name="com.voice.demo.group.GroupMemberCardActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		
+		<activity android:name="com.renren.android.ui.newTieZiActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		
+		
+		
+		
+		<!-- setting -->
+		<activity android:name="com.voice.demo.setting.SettingsActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		<activity android:name="com.voice.demo.setting.AutoManageSettingActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		
+		<activity android:name="com.voice.demo.netmonitor.NetworkMonitoringActivity"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
+		
+		<!-- 新华 -->
+         <activity android:name="com.voice.demo.ExConsultation.ExpertMainActivity" android:label="@string/app_name" android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.voice.demo.Intent.VoiceIntent.ACTION_EXPERT_MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+         <activity android:name="com.voice.demo.ExConsultation.ExpertActivity" android:label="@string/app_name" android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.voice.demo.Intent.VoiceIntent.ACTION_EXPERT_LIST_VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+                  <activity android:name="com.voice.demo.ExConsultation.ExpertOrderActivity" android:label="@string/app_name" android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.voice.demo.Intent.VoiceIntent.ACTION_EXPERT_ORDER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+          <activity android:name="com.voice.demo.ExConsultation.ExpertConmuiActivity" android:label="@string/app_name" 
+              android:theme="@style/Theme.CustomDialog" android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.voice.demo.Intent.VoiceIntent.ACTION_EXPERT_CONMUI" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+           <activity android:name="com.voice.demo.ExConsultation.ExpertDetailActivity" android:label="@string/app_name" android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.voice.demo.Intent.VoiceIntent.ACTION_EXPERT_DETAIL_VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+		
+		
+		<service android:name="com.hisun.phone.core.voice.CCPService" android:exported="false" />
+		
+		
     </application>
 
 </manifest>

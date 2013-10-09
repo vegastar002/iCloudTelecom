@@ -104,8 +104,7 @@ public class QuickAlphabeticBar extends ImageButton {
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
-						if (mDialogText != null
-								&& mDialogText.getVisibility() == View.INVISIBLE) {
+						if (mDialogText != null	&& mDialogText.getVisibility() == View.INVISIBLE) {
 							mDialogText.setVisibility(VISIBLE);
 						}
 					}
@@ -127,8 +126,7 @@ public class QuickAlphabeticBar extends ImageButton {
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
-						if (mDialogText != null
-								&& mDialogText.getVisibility() == View.VISIBLE) {
+						if (mDialogText != null	&& mDialogText.getVisibility() == View.VISIBLE) {
 							mDialogText.setVisibility(INVISIBLE);
 						}
 					}

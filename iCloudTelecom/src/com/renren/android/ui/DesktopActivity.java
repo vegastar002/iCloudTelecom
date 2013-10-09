@@ -30,13 +30,14 @@ public class DesktopActivity extends Activity implements OnOpenListener {
 //	private User mUser;
 //	private NewsFeed mNewsFeed;
 //	private Message mMessage;
-	private Chat mChat;
+	private BBS mBBS;
 	private BlankPage mPage;
 //	private Friends mFriends;
 //	private Page mPage;
 //	private Location mLocation;
 //	private Search mSearch;
 	private AppsCenter mAppsCenter;
+	private CallNet mCallNet;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -49,24 +50,25 @@ public class DesktopActivity extends Activity implements OnOpenListener {
 //		mNewsFeed = new NewsFeed(mApplication, this, this);
 //		mUser = new User(mApplication, this, this);
 //		mMessage = new Message(this);
-		mChat = new Chat(getApplicationContext(), DesktopActivity.this);
+		mBBS = new BBS(mApplication, this,this);
 		mPage = new BlankPage(this);
 //		mFriends = new Friends(mApplication, this, this);
 //		mPage = new Page(mApplication, this, this);
 //		mLocation = new Location(mApplication, this, this);
 //		mSearch = new Search(mApplication, this, this);
 		mAppsCenter = new AppsCenter(mApplication, this, this);
+//		mCallNet = new CallNet(mApplication, this, this);
 		
 		mRoot.addView(mDesktop.getView(), params);
-		mRoot.addView(mAppsCenter.getView(), params);
+		mRoot.addView(mBBS.getView(), params);
 		setContentView(mRoot);
 		setListener();
-		
 	}
 
 	private void setListener() {
-		mChat.setOnOpenListener(this);
+		mBBS.setOnOpenListener(this);
 		mPage.setOnOpenListener(this);
+//		mCallNet.setOnOpenListener(this);
 		mAppsCenter.setOnOpenListener(this);
 		
 		mDesktop.setOnChangeViewListener(new onChangeViewListener() {
@@ -89,7 +91,7 @@ public class DesktopActivity extends Activity implements OnOpenListener {
 					mRoot.close(mAppsCenter.getView());
 					break;
 				case View_Util.Chat:
-					mRoot.close(mChat.getView());
+					mRoot.close(mBBS.getView());
 					break;
 
 				}
@@ -185,11 +187,13 @@ public class DesktopActivity extends Activity implements OnOpenListener {
 
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
+				BaseApplication.getInstance().quitApp();
 				finish();
 				android.os.Process.killProcess(android.os.Process.myPid());
 				System.exit(0);
 			}
 		});
+		
 		builder.setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
 
 			public void onClick(DialogInterface dialog, int which) {

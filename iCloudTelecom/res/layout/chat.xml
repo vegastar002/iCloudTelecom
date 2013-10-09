@@ -55,16 +55,56 @@
                 android:scaleType="centerInside"
                 />
         </LinearLayout>
-        <ListView 
-            android:id="@+id/chat_display"
+        
+        
+        <RadioGroup
+            android:id="@+id/main_tab"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:listSelector="#00000000"
-            android:cacheColorHint="#00000000"
-            android:visibility="gone">
-            
-        </ListView>
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/titlebar"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/friends_chat_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="0dp"
+                android:layout_weight="1.0"
+                android:background="@drawable/v5_0_1_tabsbar_background"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="通话记录"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:visibility="visible" />
+
+            <RadioButton
+                android:id="@+id/team_chat_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:layout_marginRight="0dp"
+                android:layout_weight="1.0"
+                android:background="@drawable/v5_0_1_tabsbar_background"
+                android:button="@null"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="联系人"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:visibility="visible" />
+        </RadioGroup>
+
+        
+        <android.support.v4.view.ViewPager
+        android:id="@+id/contacts_vPager"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:flipInterval="30"
+        android:visibility="visible"
+        android:persistentDrawingCache="animation" />
         
     </LinearLayout>
 
