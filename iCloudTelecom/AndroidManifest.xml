@@ -168,7 +168,13 @@
 			android:label="@string/app_name" android:screenOrientation="portrait">
 		</activity>
 		
+		<activity android:name="com.renren.android.ui.TieZiDetail"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
 		
+		<activity android:name="com.renren.android.ui.TieZiReply"
+			android:label="@string/app_name" android:screenOrientation="portrait">
+		</activity>
 		
 		
 		<!-- setting -->

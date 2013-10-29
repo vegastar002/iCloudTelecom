@@ -1,12 +1,10 @@
 package com.renren.android.ui;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -19,47 +17,78 @@ import com.renren.android.BaseApplication;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
+import android.text.Selection;
+import android.text.Spannable;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
-public class newTieZiActivity extends Activity implements OnClickListener, Callback{
+public class TieZiReply extends Activity implements OnClickListener, Callback{
 
-	TextView originTitle, titleT, contentT;
+	ImageView backImg;
+	EditText input;
 	RadioButton send;
-	ProgressDialog pDialog;
+	BaseApplication mApplication;
 	Handler mHandler;
-	BaseApplication mApp;
-	String category;
+	ProgressDialog pDialog;
+	Timer timer = new Timer();
+	String NoID="" ;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.new_tiezi_layout);
+		setContentView(R.layout.tiezi_reply_send_layout);
 		
-		mApp = (BaseApplication) getApplication();
-		originTitle = (TextView) findViewById(R.id.originTitle);
-		category = getIntent().getStringExtra("category");
-		originTitle.setText("知道 -- " + category);
+		mApplication = (BaseApplication) getApplication();
+		mHandler = new Handler(this);
 		
-		titleT = (TextView) findViewById(R.id.titleT);
-		contentT = (TextView) findViewById(R.id.contentT);
+		backImg = (ImageView) findViewById(R.id.backImg);
+		backImg.setOnClickListener(this);
+		input = (EditText) findViewById(R.id.input);
+		
 		send = (RadioButton) findViewById(R.id.send);
 		send.setOnClickListener(this);
 		
-		mHandler = new Handler(this);
+		String auth = getIntent().getStringExtra("auth");
+		String time = getIntent().getStringExtra("time");
+		String content = getIntent().getStringExtra("content");
+		NoID = getIntent().getStringExtra("NoID");
+//		String newString = content+"\r\n\t\t\t --------- "+ auth+"  "+time+"\r\n ========================= \r\n\r\n";
+		
+		String newString="";
+		if ( auth != null ){
+			newString = auth+"  "+time+"\r\n" + content+ "\r\n ------------------------- \r\n";
+		}
+		
+		
+		input.setText(newString);
+		Spannable spanText = (Spannable)input.getText(); 
+        Selection.setSelection(spanText,input.getText().length());
+		
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+			}
+		}, 500);
+		
+		
 		pDialog = new ProgressDialog(this);
 		pDialog.setMessage("提交中...");
 		pDialog.setOnKeyListener(new OnKeyListener() {
@@ -78,34 +107,31 @@ public class newTieZiActivity extends Activity implements OnClickListener, Callb
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.send:
-			if ( titleT.getText().length()< 1 || contentT.getText().length()< 1 ){
-				return;
-			}
+		case R.id.backImg:
+			finish();
+			break;
 			
+		case R.id.send:
 			pDialog.show();
-			final String title = "new-vegastar#" + titleT.getText().toString() + "#" + category;
-			final String content = contentT.getText().toString();
 			
 			new Thread(new Runnable() {
 				
 				@Override
 				public void run() {
-					HttpPost httpRequest = new HttpPost(BaseApplication.Server_Address);
+					String username = "jeff xia"; //这里要重新设计
+					String replyPa = "reply-" + username +"#" + NoID;
+					HttpPost httpRequest = new HttpPost(mApplication.Server_Address);
 					List<BasicNameValuePair> Vaparams = new ArrayList<BasicNameValuePair>();
-					Vaparams.add(new BasicNameValuePair("fatie", title));
-					Vaparams.add(new BasicNameValuePair("fatie_content",  content));
+					Vaparams.add(new BasicNameValuePair("fatie", replyPa ));
+					Vaparams.add(new BasicNameValuePair("fatie_content", input.getText().toString() ));
 					
 					try {
 						httpRequest.setEntity(new UrlEncodedFormEntity(Vaparams, HTTP.UTF_8));
 						HttpResponse httpResponse = new DefaultHttpClient().execute(httpRequest);
 
 						if (httpResponse.getStatusLine().getStatusCode() == 200) {
-							String preTel = mApp.retrieveInputStream(httpResponse.getEntity());
-							
-							if ( preTel.contains("成功") ){
-								
-							}
+							String preTel = mApplication.retrieveInputStream(httpResponse.getEntity());
+//							Log.i("", preTel);
 							Message msg = new Message();
 							msg.what = 1;
 							msg.obj = preTel;
@@ -118,9 +144,6 @@ public class newTieZiActivity extends Activity implements OnClickListener, Callb
 					
 				}
 			}).start();
-
-
-			
 			break;
 
 		default:
@@ -138,9 +161,6 @@ public class newTieZiActivity extends Activity implements OnClickListener, Callb
 			}
 			Toast.makeText(this, msg.obj.toString(), Toast.LENGTH_SHORT).show();
 			finish();
-			break;
-			
-		case 2:
 			break;
 
 		default:

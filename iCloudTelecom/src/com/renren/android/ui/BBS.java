@@ -37,14 +37,17 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hust.wa.icloudtelecom.R;
 import com.renren.android.BaseApplication;
+import com.renren.android.BaseApplication.TieItems;
 import com.renren.android.ui.base.FlipperLayout.OnOpenListener;
 
 public class BBS {
@@ -59,19 +62,20 @@ public class BBS {
 	private RadioButton askbar, utilbar;
 	private List<View> manyViews;
 	private ListView askList = null;
-	private PullListAdapter plAdapter;
+//	private PullListAdapter plAdapter;
 	public TextView moreTV;
 	private ArrayList<Map<String, String>> array;
 //	private ProgressDialog pDialog;
-	public TextView more;
-	private ProgressBar pb;
-	private final int max=100;  //最多加载的数目
+	public TextView moreTxt;
 	private final int step=10; //每次加载的数目
 	private ProgressDialog pDialog;
 	private final static int MSG_GET_TIEZI_LIST = 1;
 	private final static int MSG_GET_TIEZI_FAILUE = 2;
-	private int lastShowItem = 0;			// 最后加载的项目
-	
+	private MyAdapter adapter;
+	private ListView listView;
+	public List<TieItems> spTieItems = new ArrayList<TieItems>();
+	private LinearLayout more_buttom;
+	private ProgressBar prograssing;
 	
 	
 	
@@ -98,6 +102,11 @@ public class BBS {
 			}
 		});
 		
+
+		for (int i = 0; i < mApp.mTieItems.size(); i++) {
+			if ( i >= 10 ) break;
+			spTieItems.add(mApp.mTieItems.get(i));
+		}
 		
 		viewPager = (ViewPager) mBBS.findViewById(R.id.bbsPage);
 		manyViews = new ArrayList<View>();
@@ -105,8 +114,7 @@ public class BBS {
 		LayoutInflater mInflater = mActivity.getLayoutInflater();
 		askbar_layout = mInflater.inflate(R.layout.askbar_layout, null);
 		utilbar_layout = mInflater.inflate(R.layout.company_group_list, null);
-		moreView = mInflater.inflate(R.layout.more_request_dialog, null);
-		
+//		moreView = mInflater.inflate(R.layout.more_request_dialog, null);
 		
 		manyViews.add(askbar_layout);
 		manyViews.add(utilbar_layout);
@@ -124,6 +132,7 @@ public class BBS {
 		});
 		
 		askbar = (RadioButton) mBBS.findViewById(R.id.askbar);
+		askbar.setText(mApp.Page_1_Wenba);
 		askbar.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -133,6 +142,7 @@ public class BBS {
 		});
 		
 		utilbar = (RadioButton) mBBS.findViewById(R.id.utilbar);
+		utilbar.setText(mApp.Page_2_Xian);
 		utilbar.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -147,10 +157,19 @@ public class BBS {
 			
 			@Override
 			public void onClick(View v) {
+				String category="";
+				if ( viewPager.getCurrentItem() == 0 ){
+					category = mApp.Page_1_Wenba;
+				}
+				else if ( viewPager.getCurrentItem() == 1 ) {
+					category = mApp.Page_2_Xian;
+				}
 				Intent mIntent = new Intent(mActivity, newTieZiActivity.class);
+				mIntent.putExtra("category", category);
 				mContext.startActivity(mIntent);
 			}
 		});
+		
 		
 		freshBtn = (ImageView) mBBS.findViewById(R.id.freshBtn);
 		freshBtn.setOnClickListener(new OnClickListener() {
@@ -185,7 +204,6 @@ public class BBS {
 							Message msg = new Message();
 							msg.what = MSG_GET_TIEZI_FAILUE;
 							mHandler.sendMessage(msg);
-							
 						}
 						
 						
@@ -198,70 +216,84 @@ public class BBS {
 		
 		
 		
-		more = (TextView) askbar_layout.findViewById(R.id.more);
-		array = new ArrayList<Map<String,String>>();
-		for(int i=0;i<10;i++){
-			Map<String, String> map=new HashMap<String, String>();
-			map.put("value", "正在加载第"+i+"行");
-			array.add(map);
-		}
 		
-		plAdapter = new PullListAdapter(mContext);
-		askList = (ListView) askbar_layout.findViewById(R.id.askList);
-		askList.setAdapter(plAdapter);
 		
-		askList.setOnItemClickListener(new OnItemClickListener() {
-
+		moreTxt = (TextView) askbar_layout.findViewById(R.id.moreTxt);
+		prograssing = (ProgressBar) askbar_layout.findViewById(R.id.prograssing);
+		
+		more_buttom = (LinearLayout) askbar_layout.findViewById(R.id.more_buttom);
+		more_buttom.setOnClickListener(new OnClickListener() {
+			
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position,	long id) {
-				
-				if( position == array.size()- 1 ){
-					Log.i("", "you click> "+ position);
-					pb = (ProgressBar) view.findViewById(R.id.pbloading);
-					more = (TextView) view.findViewById(R.id.tasksubmit_tvloading);
-					pb.setVisibility(View.VISIBLE);
-					more.setText("");
-					new Thread(){
-						public void run() {
-							loaddata();
-							mHandler.sendEmptyMessage(60);
-						}
-					}.start();
-				}else {
-					
-				}
+			public void onClick(View view) {
+				prograssing.setVisibility(View.VISIBLE);
+				loaddata();
 			}
 		});
 		
-//		askList.setOnScrollListener(new OnScrollListener() {
-//			
-//			@Override
-//			public void onScrollStateChanged(AbsListView view, int scrollState) {
-//				if( (OnScrollListener.SCROLL_STATE_IDLE==scrollState) && 
-//						(lastShowItem==(askList.getAdapter().getCount())) )
-//				{
-//					
+		
+		listView = (ListView) askbar_layout.findViewById(R.id.askList);
+		adapter = new MyAdapter(mContext);
+		listView.setAdapter(adapter);
+		listView.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				switch (scrollState) {
+				// 当不滚动时
+				case OnScrollListener.SCROLL_STATE_IDLE:
+					if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
+						more_buttom.setVisibility(View.VISIBLE);
+					}else {
+						more_buttom.setVisibility(View.GONE);
+					}
+					break;
+					
+				case OnScrollListener.SCROLL_STATE_FLING:
+					if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
+						more_buttom.setVisibility(View.VISIBLE);
+					}else {
+						more_buttom.setVisibility(View.GONE);
+					}
+	                break;
+				}
+			}
+			
+			@Override
+			public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position,	long id) {
+				Log.i("", "position> "+ position);
+//				if( position == 10){
+//					pb=(ProgressBar) view.findViewById(R.id.pbloading);
+//					more=(TextView) view.findViewById(R.id.tasksubmit_tvloading);
+//					pb.setVisibility(View.VISIBLE);
+//					more.setText("");
+//					new Thread(){
+//						public void run() {
+//							loaddata();
+////							hh.sendEmptyMessage(0);
+//							mHandler.sendEmptyMessage(60);
+//						}
+//					}.start();
 //				}
-//			}
-//			@Override
-//			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//				// 可视的最后一个列表项的索引
-//				lastShowItem = firstVisibleItem + visibleItemCount;
-//				if (lastShowItem == max) {
-//					Toast.makeText(mContext, "加载完成", Toast.LENGTH_SHORT).show();
-//				}
-//				
-//				
-//				if (lastShowItem < totalItemCount) {
-//					if (more.isShown()) {
-//						more.setVisibility(View.INVISIBLE);
-//					}
-//				} else {
-//					more.setText("更多。。。");
-//					more.setVisibility(View.INVISIBLE);
-//				}
-//			}
-//		});
+				
+				Intent mIntent = new Intent(mContext, TieZiDetail.class);
+				mIntent.putExtra("title", spTieItems.get(position).title);
+				mIntent.putExtra("auth", spTieItems.get(position).auth);
+				mIntent.putExtra("time", spTieItems.get(position).time);
+				mIntent.putExtra("NoID", spTieItems.get(position).NoID);
+				mIntent.putExtra("content", spTieItems.get(position).zcontent);
+				mContext.startActivity(mIntent);
+			}
+		});
 		
 		
 		mFlip = (ImageView) mBBS.findViewById(R.id.chat_flip);
@@ -269,28 +301,75 @@ public class BBS {
 	}
 
 	
+	public class MyAdapter extends BaseAdapter{
+		Context context;
+		int count;
+		LayoutInflater inflater;
+		
+		public MyAdapter(Context context) {
+			this.context=context;
+			inflater=LayoutInflater.from(context);
+		}
+
+		@Override
+		public int getCount() {
+			count = spTieItems.size();
+			return count;
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			convertView=inflater.inflate(R.layout.item, null);
+			TextView title = (TextView) convertView.findViewById(R.id.title);
+			TextView auth = (TextView) convertView.findViewById(R.id.auth);
+			TextView time = (TextView) convertView.findViewById(R.id.time);
+			TextView numc = (TextView) convertView.findViewById(R.id.numc);
+			
+			title.setText(spTieItems.get(position).title);
+			auth.setText(spTieItems.get(position).auth);
+			time.setText(spTieItems.get(position).time);
+			numc.setText(spTieItems.get(position).numHuiTie);
+			
+			return convertView;
+		}
+
+	}
+	
+	
+	
+	 Handler hh=new Handler(){
+	    	public void handleMessage(android.os.Message msg) {
+	    		adapter.notifyDataSetChanged();
+	    	}
+	    };
+	    
+	    
 	protected void loaddata() {
-		int curCount = askList.getAdapter().getCount(); //当前listView中的item数目
-		System.out.println("当前数目"+curCount);
-		if((curCount+step)<=max){
-			for(int i=curCount;i<(curCount+step);i++){
-				Map<String, String> map=new HashMap<String, String>();
-				map.put("value", "正在加载第"+i+"行");
-				array.add(map);
-			}
-		}else {
-			for(int i=curCount; i<max; i++)
-    		{
-    			Map<String, String> map = new HashMap<String, String>();
-    			map.put("value", "正在加载第"+i+"行");
-            	array.add(map);
-    		}
+		int curCount = spTieItems.size();
+		if ( curCount == mApp.mTieItems.size() ){
+			Toast.makeText(mContext, "数据加载完毕", Toast.LENGTH_SHORT).show();
+			more_buttom.setVisibility(View.GONE);
+			prograssing.setVisibility(View.GONE);
+			return;
 		}
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		
+		for (int i = curCount; i < mApp.mTieItems.size(); i++) {
+			if ( i >= step+curCount ) break;
+			spTieItems.add(mApp.mTieItems.get(i));
 		}
+		adapter.notifyDataSetChanged();
+		more_buttom.setVisibility(View.GONE);
+		prograssing.setVisibility(View.GONE);
 	}
 	
 	public Handler mHandler = new Handler() {
@@ -299,7 +378,7 @@ public class BBS {
 			case MSG_GET_TIEZI_LIST:
 				String xmlString = msg.obj.toString();
 				mApp.catNetTie(xmlString);
-				plAdapter.notifyDataSetChanged();
+				adapter.notifyDataSetChanged();
 				pDialog.dismiss();
 				break;
 				
@@ -309,7 +388,7 @@ public class BBS {
 				break;
 				
 			case 60:
-				plAdapter.notifyDataSetChanged();
+				adapter.notifyDataSetChanged();
 				break;
 
 			default:
@@ -352,56 +431,6 @@ public class BBS {
 		
 	}
 	
-	class PullListAdapter extends BaseAdapter {
-		Context context;
-		LayoutInflater inflater;
-
-		public PullListAdapter(Context context) {
-			this.context = context;
-			inflater = LayoutInflater.from(context);
-		}
-
-		@Override
-		public int getCount() {
-			return mApp.mTieItems.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return null;
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return position;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			
-			if (position != (getCount() - 1)) {
-				convertView = inflater.inflate(R.layout.pull_list_item, null);
-				TextView title = (TextView) convertView.findViewById(R.id.title);
-				TextView auth = (TextView) convertView.findViewById(R.id.auth);
-				TextView time = (TextView) convertView.findViewById(R.id.time);
-				
-				title.setText(mApp.mTieItems.get(position).title);
-				auth.setText(mApp.mTieItems.get(position).auth);
-				time.setText(mApp.mTieItems.get(position).time);
-				
-				return convertView;
-				
-			} else {
-				
-				convertView = inflater.inflate(R.layout.more_request_dialog, null);
-				ProgressBar pa = (ProgressBar) convertView.findViewById(R.id.pbloading);
-				pa.setVisibility(View.INVISIBLE);
-				return convertView;
-			}
-
-		}
-
-	}	
 	
 	class XTOnPageChangeListener implements OnPageChangeListener{
 

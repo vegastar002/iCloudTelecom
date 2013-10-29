@@ -363,7 +363,7 @@ public class ChatRoomActivity extends GroupBaseActivity implements View.OnClickL
 					isJion = false;
 					Log4Util.d(VoiceHelper.DEMO_TAG , "[InterPhoneRoomActivity] handleMessage: Sorry ,invite member inter phone failed ...");
 					VoiceHelper.getInstance().getDevice().exitChatroom();
-					BaseApplication.getInstance().showToast(getString(R.string.str_join_chatroom_failed, reason));
+					VoiceApplication.getInstance().showToast(getString(R.string.str_join_chatroom_failed, reason));
 					finish();	
 				}
 				break;

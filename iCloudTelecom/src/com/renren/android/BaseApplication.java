@@ -64,7 +64,11 @@ public class BaseApplication extends Application {
 	public final static String VALUE_DIAL_VOIP_INPUT = "VoIPInput";
 	public final static String VALUE_DIAL_MODE_VEDIO = "vedio_talk";
 	
-	public final static String Server_Address = "http://192.168.3.106:8080/eFlowIM_Upload/p/fatie";
+	public final static String Page_1_Wenba = "问吧";
+	public final static String Page_2_Xian = "闲扯";
+	
+//	public final static String Server_Address = "http://192.168.3.102:8080/eFlowIM_Upload/p/fatie";
+	public final static String Server_Address = "http://121.199.3.19:8080/eFlowIM/p/fatie";
 
 	//这玩意我把它拿出来了 做全局使用
 	public List<ContactBean> listContacts = new ArrayList<ContactBean>();
@@ -489,6 +493,9 @@ public class BaseApplication extends Application {
 						else if ( employeeMeta.item(k).getNodeName().equalsIgnoreCase("time") ) {
 							tis.time = employeeMeta.item(k).getTextContent();
 						}
+						else if ( employeeMeta.item(k).getNodeName().equalsIgnoreCase("numHuiTie") ) {
+							tis.numHuiTie = employeeMeta.item(k).getTextContent();
+						}
 						
 					}
 					
@@ -496,11 +503,13 @@ public class BaseApplication extends Application {
 				}
 			}
 			
-//			Log.i("", "传值1> "+ mApplication.mTieItems.size());
-//			for (int j = 0; j < mApplication.mTieItems.size(); j++) {
-//				Log.i("", mApplication.mTieItems.get(j).auth+ mApplication.mTieItems.get(j).category+ mApplication.mTieItems.get(j).NoID+ mApplication.mTieItems.get(j).time+ mApplication.mTieItems.get(j).title+ mApplication.mTieItems.get(j).zcontent );
-//				
-//			}
+			
+			Log.i("", "贴子条数> "+ mTieItems.size());
+			for (int j = 0; j < mTieItems.size(); j++) {
+//				Log.i("", mTieItems.get(j).auth+ mTieItems.get(j).category+ mTieItems.get(j).NoID+ mTieItems.get(j).time+ mTieItems.get(j).title+ mTieItems.get(j).zcontent );
+//				Log.i("", mTieItems.get(j).title );
+				
+			}
 			
 		} catch (FileNotFoundException e) {
 			System.out.println(e.getMessage());
@@ -520,6 +529,7 @@ public class BaseApplication extends Application {
 		public String category = "";
 		public String zcontent = "";
 		public String time = "";
+		public String numHuiTie = "";
 	}
 	
 	

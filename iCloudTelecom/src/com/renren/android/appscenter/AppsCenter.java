@@ -64,7 +64,7 @@ public class AppsCenter {
 	private Context mContext;
 	private BaseApplication mApp;
 	private Activity mActivity;
-	private View mCallLog, exCallLogView, contactView;
+	private View mCallLog, exCallLogView, contactView, accountView;
 
 	private ImageView mFlip;
 	private ViewPager viewPager;
@@ -112,9 +112,11 @@ public class AppsCenter {
 //		contactView = mInflater.inflate(R.layout.ex_list_call_log2, null);
 		exCallLogView = mInflater.inflate(R.layout.ex_list_call_log, null);
 		contactView = mInflater.inflate(R.layout.home_contact_page, null);
+		accountView = mInflater.inflate(R.layout.account_detail_layout, null);
 		
 		manyViews.add(exCallLogView);
 		manyViews.add(contactView);
+//		manyViews.add(accountView);
 		
 		viewPager.setAdapter(new MyPagerAdapter(manyViews));
 		viewPager.setCurrentItem(0);

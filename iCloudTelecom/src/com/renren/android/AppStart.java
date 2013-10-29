@@ -13,10 +13,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -40,6 +42,7 @@ import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
 import com.hisun.phone.core.voice.DeviceListener.Reason;
 import com.hisun.phone.core.voice.util.Log4Util;
@@ -57,6 +60,7 @@ public class AppStart extends Activity {
 	private AsyncQueryHandler asyncQueryContacts;
 	private Map<Integer, ContactBean> contactIdMap = null;
 	private final static int MSG_GET_TIEZI_LIST = 1;
+	private final static int MSG_CONNECT_FAILUE = 2;
 //	private List<TieItems> mTieItems = new ArrayList<TieItems>();
 	
 	
@@ -87,14 +91,17 @@ public class AppStart extends Activity {
 				HttpPost httpRequest = new HttpPost(mApplication.Server_Address);
 				List<BasicNameValuePair> Vaparams = new ArrayList<BasicNameValuePair>();
 				Vaparams.add(new BasicNameValuePair("fatie", "catch" ));
+				HttpClient client = new DefaultHttpClient();
+				client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 10000);
+				client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 10000);
 				
 				try {
 					httpRequest.setEntity(new UrlEncodedFormEntity(Vaparams, HTTP.UTF_8));
-					HttpResponse httpResponse = new DefaultHttpClient().execute(httpRequest);
+					HttpResponse httpResponse = client.execute(httpRequest);
 
 					if (httpResponse.getStatusLine().getStatusCode() == 200) {
 						String preTel = mApplication.retrieveInputStream(httpResponse.getEntity());
-//						Log.i("", preTel);
+//						Log.i("", "xml> " + preTel);
 						
 						Message msg = new Message();
 						msg.what = MSG_GET_TIEZI_LIST;
@@ -103,6 +110,9 @@ public class AppStart extends Activity {
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
+					Message msg = new Message();
+					msg.what = MSG_CONNECT_FAILUE;
+					helperHandler.sendMessage(msg);
 				}
 				
 				
@@ -202,7 +212,7 @@ public class AppStart extends Activity {
 				}
 				
 				
-				Log.i("", "联系人初始化> " + mApplication.listContacts.size() );
+//				Log.i("", "联系人初始化> " + mApplication.listContacts.size() );
 				if ( mApplication.listContacts.size() == 0) {
 				}
 			}
@@ -244,6 +254,9 @@ public class AppStart extends Activity {
 					Intent intent = new Intent();
 					intent.setClass(AppStart.this, DesktopActivity.class);
 					startActivity(intent);
+					finish();
+				} else if (msg.what == MSG_CONNECT_FAILUE) {
+					Toast.makeText(AppStart.this, "服务器连接失败", Toast.LENGTH_SHORT).show();
 					finish();
 				}
 				

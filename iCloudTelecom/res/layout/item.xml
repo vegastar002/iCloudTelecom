@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:background="@color/white" >
+
+    <ImageView
+        android:id="@+id/contactIcon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_margin="5dip"
+        android:background="@drawable/head_portrait" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/contactIcon"
+        android:singleLine="true"
+        android:text="title"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+    
+    
+    <ImageView
+        android:id="@+id/lbs_nearby_people_item_picture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/contactIcon"
+        android:layout_toRightOf="@+id/contactIcon"
+        android:src="@drawable/news_commentlike_comment" />
+
+    <TextView
+        android:id="@+id/numc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/lbs_nearby_people_item_picture"
+        android:layout_alignBottom="@+id/contactIcon"
+        android:singleLine="true"
+        android:text="13"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
+    
+    
+    <TextView
+        android:id="@+id/auth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/contactIcon"
+        android:layout_toRightOf="@+id/contactIcon"
+        android:singleLine="true"
+        android:text="春江水"
+        android:visibility="gone"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/contactIcon"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="4dip"
+        android:singleLine="true"
+        android:text="2013-9-30 10:45"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+    
+
+    <ImageView
+        android:id="@+id/lbs_nearby_people_item_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="1dip"
+        android:src="@drawable/icon_group_card_detail" />
+
+</RelativeLayout>

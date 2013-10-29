@@ -85,7 +85,6 @@
                 android:button="@null"
                 android:checked="true"
                 android:gravity="center_vertical|center_horizontal"
-                android:text="问吧"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:visibility="visible" />
@@ -100,7 +99,6 @@
                 android:background="@drawable/v5_0_1_tabsbar_background"
                 android:button="@null"
                 android:gravity="center_vertical|center_horizontal"
-                android:text="闲扯"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:visibility="visible" />
